@@ -59,7 +59,9 @@ npm run web
 
 ## Estrutura do projeto
 
-Constantes e tipagens ficam **no mesmo nível** do arquivo que as usa (`pasta/index.tsx`, `pasta/constants.ts`, `pasta/props.ts`). Se um componente não tem valor fixo ou props, o arquivo correspondente **não é criado**.
+Constantes e tipagens ficam **no mesmo nível** do arquivo que as usa (`pasta/index.tsx`, `pasta/constants.ts`, `pasta/props.ts`). Se um módulo não tem valor fixo ou props, o arquivo correspondente **não é criado**.
+
+`src/app/` é só de **rotas** do Expo Router: qualquer `.ts`/`.tsx` ali vira tela. Por isso a UI, o `C` e as tipagens da home ficam em `src/screens/Home/`. A rota `index.tsx` apenas reexporta essa tela.
 
 ```text
 assets/
@@ -69,9 +71,12 @@ assets/
     └── long.png           # Ilustração da pausa longa
 src/
 ├── app/
-│   ├── index.tsx          # Tela principal (timer e modos)
-│   ├── constants.ts       # C: modos, textos, intervalo do timer
-│   └── props.ts           # Tipo Pomodoro
+│   └── index.tsx          # Rota / — monta a tela Home
+├── screens/
+│   └── Home/
+│       ├── index.tsx      # Tela do pomodoro
+│       ├── constants.ts   # C: modos, textos, intervalo do timer
+│       └── props.ts       # Tipo Pomodoro
 └── components/
     ├── ActionButton/      # Seletor de modo (Foco / Pausas)
     │   ├── index.tsx
