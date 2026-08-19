@@ -1,98 +1,103 @@
-import * as Device from 'expo-device';
-import { Platform, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { ActionButton } from "@/components/ActionButton";
+import { FokusButton } from "@/components/FokusButton";
+import { useState } from "react";
+import { Image, StyleSheet, Text, View } from "react-native";
 
-import { AnimatedIcon } from '@/components/animated-icon';
-import { HintRow } from '@/components/hint-row';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { WebBadge } from '@/components/web-badge';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
+const pomodoro = [
+  {
+    id: "focus",
+    initialValue: 25,
+    image: require("./pomodoro.png"),
+    text: "Foco",
+  },
+  {
+    id: "short",
+    initialValue: 5,
+    image: require("./short.png"),
+    text: "Pausa curta",
+  },
+  {
+    id: "long",
+    initialValue: 15,
+    image: require("./long.png"),
+    text: "Pausa longa",
+  },
+];
 
-function getDevMenuHint() {
-  if (Platform.OS === 'web') {
-    return <ThemedText type="small">use browser devtools</ThemedText>;
-  }
-  if (Device.isDevice) {
-    return (
-      <ThemedText type="small">
-        shake device or press <ThemedText type="code">m</ThemedText> in terminal
-      </ThemedText>
-    );
-  }
-  const shortcut = Platform.OS === 'android' ? 'cmd+m (or ctrl+m)' : 'cmd+d';
+export default function Index() {
+  const [timerType, setTimerType] = useState(pomodoro[0]);
+
   return (
-    <ThemedText type="small">
-      press <ThemedText type="code">{shortcut}</ThemedText>
-    </ThemedText>
-  );
-}
-
-export default function HomeScreen() {
-  return (
-    <ThemedView style={styles.container}>
-      <SafeAreaView style={styles.safeArea}>
-        <ThemedView style={styles.heroSection}>
-          <AnimatedIcon />
-          <ThemedText type="title" style={styles.title}>
-            Welcome to&nbsp;Expo
-          </ThemedText>
-        </ThemedView>
-
-        <ThemedText type="code" style={styles.code}>
-          get started
-        </ThemedText>
-
-        <ThemedView type="backgroundElement" style={styles.stepContainer}>
-          <HintRow
-            title="Try editing"
-            hint={<ThemedText type="code">src/app/index.tsx</ThemedText>}
-          />
-          <HintRow title="Dev tools" hint={getDevMenuHint()} />
-          <HintRow
-            title="Fresh start"
-            hint={<ThemedText type="code">npm run reset-project</ThemedText>}
-          />
-        </ThemedView>
-
-        {Platform.OS === 'web' && <WebBadge />}
-      </SafeAreaView>
-    </ThemedView>
+    <View style={styles.container}>
+      <Image source={timerType.image} style={styles.image} />
+      <View style={styles.actions}>
+        <View style={styles.context}>
+          {pomodoro.map((pom) => (
+            <ActionButton
+              key={pom.id}
+              onPress={() => setTimerType(pom)}
+              active={timerType.id === pom.id}
+              text={pom.text}
+            />
+          ))}
+        </View>
+        <Text style={styles.timer}>
+          {new Date(timerType.initialValue * 1000).toLocaleTimeString("pt-BR", {
+            minute: "2-digit",
+            second: "2-digit",
+          })}
+        </Text>
+        <FokusButton onPress={() => console.log("Começar")} />
+      </View>
+      <View style={styles.footer}>
+        <Text style={styles.footerText}>
+          Projeto fictício e sem fins comerciais.
+        </Text>
+        <Text style={styles.footerText}>Desenvolvido por Alura.</Text>
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    flexDirection: 'row',
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#021123",
+    gap: 40,
   },
-  safeArea: {
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    alignItems: 'center',
-    gap: Spacing.three,
-    paddingBottom: BottomTabInset + Spacing.three,
-    maxWidth: MaxContentWidth,
+  image: {
+    width: "80%",
+    height: "40%",
+    objectFit: "contain",
   },
-  heroSection: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    gap: Spacing.four,
+  actions: {
+    padding: 24,
+    backgroundColor: "#14448080",
+    width: "80%",
+    borderRadius: 32,
+    borderWidth: 2,
+    borderColor: "#144480",
+    gap: 32,
   },
-  title: {
-    textAlign: 'center',
+  context: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
   },
-  code: {
-    textTransform: 'uppercase',
+  timer: {
+    fontSize: 54,
+    color: "#fff",
+    fontWeight: "bold",
+    textAlign: "center",
   },
-  stepContainer: {
-    gap: Spacing.three,
-    alignSelf: 'stretch',
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.four,
-    borderRadius: Spacing.four,
+  footer: {
+    width: "80%",
+  },
+  footerText: {
+    fontSize: 12.5,
+    textAlign: "center",
+    color: "#98A0A8",
   },
 });
