@@ -4,39 +4,13 @@ import { IconPause, IconPlay } from "@/components/icons";
 import { Timer } from "@/components/Timer";
 import { useRef, useState } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
-
-interface Pomodoro {
-  id: string;
-  initialValue: number;
-  image: any;
-  text: string;
-}
-
-const pomodoro: Pomodoro[] = [
-  {
-    id: "focus",
-    initialValue: 25 * 60,
-    image: require("./pomodoro.png"),
-    text: "Foco",
-  },
-  {
-    id: "short",
-    initialValue: 5 * 60,
-    image: require("./short.png"),
-    text: "Pausa curta",
-  },
-  {
-    id: "long",
-    initialValue: 15 * 60,
-    image: require("./long.png"),
-    text: "Pausa longa",
-  },
-];
+import { C } from "./constants";
+import { Pomodoro } from "./props";
 
 export default function Index() {
-  const [timerType, setTimerType] = useState(pomodoro[0]);
+  const [timerType, setTimerType] = useState(C.pomodoro[0]);
   const [timerRunning, setTimerRunning] = useState(false);
-  const [seconds, setSeconds] = useState(pomodoro[0].initialValue);
+  const [seconds, setSeconds] = useState(C.pomodoro[0].initialValue);
 
   const timerRef = useRef<number | null>(null);
 
@@ -70,7 +44,7 @@ export default function Index() {
         }
         return prev - 1;
       });
-    }, 1000);
+    }, C.timer.intervalMs);
 
     timerRef.current = id;
   };
@@ -80,7 +54,7 @@ export default function Index() {
       <Image source={timerType.image} style={styles.image} />
       <View style={styles.actions}>
         <View style={styles.context}>
-          {pomodoro.map((pom) => (
+          {C.pomodoro.map((pom) => (
             <ActionButton
               key={pom.id}
               onPress={() => toggleTimerType(pom)}
@@ -91,16 +65,14 @@ export default function Index() {
         </View>
         <Timer totalSeconds={seconds} />
         <FokusButton
-          title={timerRunning ? "Pausar" : "Começar"}
+          title={timerRunning ? C.timer.pauseLabel : C.timer.startLabel}
           icon={timerRunning ? <IconPause /> : <IconPlay />}
           onPress={toggleTimer}
         />
       </View>
       <View style={styles.footer}>
-        <Text style={styles.footerText}>
-          Projeto fictício e sem fins comerciais.
-        </Text>
-        <Text style={styles.footerText}>Desenvolvido por Alura.</Text>
+        <Text style={styles.footerText}>{C.footer.disclaimer}</Text>
+        <Text style={styles.footerText}>{C.footer.credits}</Text>
       </View>
     </View>
   );

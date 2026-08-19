@@ -1,10 +1,5 @@
 import { Pressable, StyleSheet, Text } from "react-native";
-
-interface ActionButtonProps {
-  onPress: () => void;
-  active?: boolean;
-  text: string;
-}
+import { ActionButtonProps } from "./props";
 
 export const ActionButton = ({ onPress, active, text }: ActionButtonProps) => {
   return (

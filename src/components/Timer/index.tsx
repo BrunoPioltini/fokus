@@ -1,19 +1,13 @@
 import { StyleSheet, Text } from "react-native";
-
-type TimerProps = {
-  totalSeconds: number;
-};
+import { C } from "./constants";
+import { TimerProps } from "./props";
 
 export const Timer = ({ totalSeconds }: TimerProps) => {
   const date = new Date(totalSeconds * 1000);
-  const options: Intl.DateTimeFormatOptions = {
-    minute: "2-digit",
-    second: "2-digit",
-  };
 
   return (
     <Text style={styles.timer}>
-      {date.toLocaleTimeString("pt-BR", options)}
+      {date.toLocaleTimeString(C.locale, C.timeFormat)}
     </Text>
   );
 };
